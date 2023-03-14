@@ -49,5 +49,8 @@
   "bugs": {
     "url": "https://github.com/Stalloyde/KnightsTravails/issues"
   },
-  "homepage": "https://github.com/Stalloyde/KnightsTravails#readme"
+  "homepage": "https://github.com/Stalloyde/KnightsTravails#readme",
+  "dependencies": {
+    "mathjs": "^11.6.0"
+  }
 }
