@@ -45,7 +45,9 @@ function knightsMove(root, targetPosition) {
 
     const movesArray = getPossibleMoves(currentNode);
     movesArray.forEach((moves) => {
-      if (!visitedNode.includes(moves) && !queue.includes(moves)) {
+      const serialisedVisitedNode = JSON.stringify(visitedNode);
+      const serialisedMove = JSON.stringify(moves);
+      if (serialisedVisitedNode.indexOf(serialisedMove) === -1) {
         rootNode.children.push(nodeFactory(moves, rootNode));
         visitedNode.push(moves);
         queue.push(moves);
@@ -53,17 +55,26 @@ function knightsMove(root, targetPosition) {
     });
 
     rootNode.children.forEach((childNode) => {
-      if (childNode.value.join() === targetPosition.join()) {
+      if (
+        childNode.value.join() === targetPosition.join() ||
+        childNode.children.value === targetPosition.join()
+      ) {
         queue.length = 0;
-        return targetPosition;
       }
 
-      const newNode = queue[0];
-      queue.shift();
-      childNode.children = buildGraph(newNode, queue, visitedNode, parentNode);
+      if (queue.length > 0) {
+        const newNode = queue[0];
+        queue.shift();
+        childNode.children = buildGraph(
+          newNode,
+          queue,
+          visitedNode,
+          parentNode
+        );
+      }
     });
     return rootNode;
   }
   return buildGraph(root);
 }
-console.log(knightsMove([1, 1], [5, 4]));
+console.log(knightsMove([1, 1], [2, 8]));
