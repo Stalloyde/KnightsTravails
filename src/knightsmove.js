@@ -46,7 +46,7 @@ function knightsMove(root, targetPosition) {
     const array = getPossibleMoves(root);
     array.forEach((item) => {
       if (!visitedNode.includes(item) && !queue.includes(item)) {
-        rootNode.children.push(nodeFactory(item, root));
+        rootNode.children.push(nodeFactory(item, rootNode));
         visitedNode.push(item);
         queue.push(item);
       }
@@ -63,7 +63,7 @@ function knightsMove(root, targetPosition) {
         buildGraph(newRoot, queue, visitedNode, parentNode);
       }
     });
-    return rootNode;
+    return rootNode.children;
   }
   return buildGraph(root);
 }
