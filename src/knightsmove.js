@@ -41,12 +41,12 @@ function knightsMove(root, targetPosition) {
     visitedNode = [root],
     parentNode = null
   ) {
-    let rootNode = nodeFactory(root, root);
+    let rootNode = nodeFactory(root);
 
-    const array = getPossibleMoves(root); //3,2
+    const array = getPossibleMoves(root);
     array.forEach((item) => {
       if (!visitedNode.includes(item) && !queue.includes(item)) {
-        rootNode.children.push(nodeFactory(item, rootNode)); //3,2's children = 5,3... 5,1... 4,4
+        rootNode.children.push(nodeFactory(item, root));
         visitedNode.push(item);
         queue.push(item);
       }
@@ -58,13 +58,13 @@ function knightsMove(root, targetPosition) {
       }
 
       while (queue.length > 0) {
-        const newRoot = queue[0]; //3,.2
-        queue.shift(); //2,3
-        buildGraph(newRoot, queue, visitedNode, parentNode); //3,2, 2,3
+        const newRoot = queue[0];
+        queue.shift();
+        buildGraph(newRoot, queue, visitedNode, parentNode);
       }
     });
     return rootNode;
   }
   return buildGraph(root);
 }
-console.log(knightsMove([1, 1], [3, 7]));
+console.log(knightsMove([1, 1], [5, 4]));
