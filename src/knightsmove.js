@@ -1,9 +1,5 @@
 import { add } from 'mathjs';
 
-function nodeFactory(value, parentNode, children = []) {
-  return { value, parentNode, children };
-}
-
 function getPossibleMoves(root) {
   const possibleMovesArray = [];
   const moveVectors = [
@@ -34,47 +30,48 @@ function getPossibleMoves(root) {
   return possibleMovesArray;
 }
 
+function nodeFactory(value, parentNode) {
+  return { value, parentNode };
+}
+
 function knightsMove(root, targetPosition) {
-  function buildGraph(
+  function buildTree(
     currentNode,
     queue = [],
     visitedNode = [currentNode],
-    parentNode = null
+    parentNode = null,
+    childNodeArray = []
   ) {
-    let rootNode = nodeFactory(currentNode);
+    let rootNode = nodeFactory(root);
+
+    if (currentNode) {
+      rootNode = currentNode;
+    }
 
     const movesArray = getPossibleMoves(currentNode);
     movesArray.forEach((moves) => {
       const serialisedVisitedNode = JSON.stringify(visitedNode);
       const serialisedMove = JSON.stringify(moves);
       if (serialisedVisitedNode.indexOf(serialisedMove) === -1) {
-        rootNode.children.push(nodeFactory(moves, rootNode));
+        childNodeArray.push(nodeFactory(moves, rootNode));
         visitedNode.push(moves);
         queue.push(moves);
       }
     });
 
-    rootNode.children.forEach((childNode) => {
-      if (
-        childNode.value.join() === targetPosition.join() ||
-        childNode.children.value === targetPosition.join()
-      ) {
+    rootNode.children = childNodeArray;
+
+    rootNode.children.forEach((child) => {
+      if (child.value.join() === targetPosition.join()) {
         queue.length = 0;
       }
 
-      if (queue.length > 0) {
-        const newNode = queue[0];
-        queue.shift();
-        childNode.children = buildGraph(
-          newNode,
-          queue,
-          visitedNode,
-          parentNode
-        );
-      }
+      const newNode = queue[0];
+      queue.shift();
+      child = buildTree(newNode, queue, visitedNode, rootNode.parentNode, []);
     });
     return rootNode;
   }
-  return buildGraph(root);
+  return buildTree(root);
 }
-console.log(knightsMove([1, 1], [2, 8]));
+console.log(knightsMove([5, 4], [1, 1]));
