@@ -31,8 +31,8 @@ function getPossibleMoves(root) {
   return possibleMovesArray;
 }
 
-function nodeFactory(value, parentNode = null) {
-  return { value, parentNode };
+function nodeFactory(value) {
+  return { value };
 }
 
 function knightsMove(root, targetPosition) {
@@ -45,7 +45,7 @@ function knightsMove(root, targetPosition) {
       const currentNode = queue.shift();
       const movesArray = getPossibleMoves(currentNode.value);
       movesArray.forEach((moves) => {
-        const childNode = nodeFactory(moves, currentNode);
+        const childNode = nodeFactory(moves);
         childNodeArray.push(childNode);
         queue.push(childNode);
       });
@@ -58,6 +58,28 @@ function knightsMove(root, targetPosition) {
     return rootNode;
   }
   const rootNode = buildTree(root);
-  return rootNode;
+
+  function findShortestPath(root) {
+    root.path = root.value;
+    const queue = [root];
+    while (queue.length > 0) {
+      const currentNode = queue.shift();
+      root.path = [currentNode.value];
+
+      currentNode.children.forEach((child) => {
+        child.path = [child.value, ...currentNode.path];
+        queue.push(child);
+      });
+
+      if (currentNode.value.join() === targetPosition.join()) {
+        queue.length = 0;
+        return currentNode.path.reverse();
+      }
+    }
+    return root;
+  }
+
+  return findShortestPath(rootNode);
 }
-console.log(knightsMove([1, 1], [5, 4]));
+
+console.log(knightsMove([5, 4], [1, 1]));
