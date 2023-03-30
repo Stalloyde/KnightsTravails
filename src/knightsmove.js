@@ -76,7 +76,7 @@ function knightsMove(root, targetPosition) {
         return currentNode.path.reverse();
       }
     }
-    return root;
+    return 'No paths found';
   }
 
   return findShortestPath(rootNode);
